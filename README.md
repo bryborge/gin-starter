@@ -4,8 +4,29 @@ Web API boilerplate for Go.
 
 ## Run
 
-1. `go run .` or `go run main.go`
-2. Navigate to `localhost:8000/api/v1/pokemon`
+### Docker
+
+1.  Build the image.
+
+    ```sh
+    docker build  -t myapp .
+    ```
+
+2.  Start a container of the newly built image.
+
+    ```sh
+    docker run --rm -p 8000:8000 my-go-api
+    ```
+
+### Local
+
+1.  Run the app.
+
+    ```sh
+    go run .
+    ```
+
+2. Navigate to `localhost:8000`
 
 ## Helpful Commands
 
