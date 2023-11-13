@@ -6,6 +6,7 @@ import (
 	"net/url"
 	"os"
 	"starter_api/controllers"
+	ApiV1 "starter_api/controllers/api/v1"
 	"time"
 
 	jwtmiddleware "github.com/auth0/go-jwt-middleware/v2"
@@ -18,22 +19,23 @@ import (
 )
 
 func main() {
+	setEnv()
 	serveApp()
 }
 
-func serveApp() {
-	// Set Env
+func setEnv() {
 	err := godotenv.Load()
 	if err != nil {
 		log.Fatal("Error loading .env file")
 	}
+}
 
-	// Setup Auth0
+func serveApp() {
+	// Setup Auth0 JWT Validation
+	// TODO: Create Auth0 middleware wrapper
 	issuerURL, _ := url.Parse(os.Getenv("AUTH0_ISSUER_URL"))
 	audience := os.Getenv("AUTH0_AUDIENCE")
-
 	provider := jwks.NewCachingProvider(issuerURL, time.Duration(5*time.Minute))
-
 	jwtValidator, _ := validator.New(
 		provider.KeyFunc,
 		validator.RS256,
@@ -41,6 +43,7 @@ func serveApp() {
 		[]string{audience},
 	)
 
+	// Create Middlewares
 	jwtMiddleware := jwtmiddleware.New(jwtValidator.ValidateToken)
 
 	// Create Server
@@ -53,7 +56,7 @@ func serveApp() {
 	// Private Routes
 	privateRoutes := router.Group("/api/v1")
 	privateRoutes.Use(adapter.Wrap(jwtMiddleware.CheckJWT))
-	privateRoutes.GET("/pokemon", controllers.GetPokemon)
+	privateRoutes.GET("/pokemon", ApiV1.GetPokemon)
 
 	// Serve
 	router.Run(":8000")
