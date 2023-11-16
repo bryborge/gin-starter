@@ -1,20 +1,16 @@
 package main
 
 import (
+	"gin-starter/server"
 	"log"
-	"starter_api/server"
 
 	"github.com/joho/godotenv"
 )
 
 func main() {
-	setEnv()
-	server.Init()
-}
-
-func setEnv() {
-	err := godotenv.Load()
-	if err != nil {
-		log.Fatal("Error loading .env file")
+	if err := godotenv.Load(); err != nil {
+		log.Fatalf("Error loading .env file: %v", err)
 	}
+
+	server.Init()
 }

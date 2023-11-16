@@ -1,10 +1,10 @@
 package server
 
 import (
+	"gin-starter/controllers"
+	ApiV1 "gin-starter/controllers/api/v1"
 	"net/url"
 	"os"
-	"starter_api/controllers"
-	ApiV1 "starter_api/controllers/api/v1"
 	"time"
 
 	jwtmiddleware "github.com/auth0/go-jwt-middleware/v2"
