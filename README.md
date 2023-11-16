@@ -1,6 +1,6 @@
-# Go Starter
+# Gin Starter
 
-Web API boilerplate for Go.
+A web API boilerplate for [Gin](https://gin-gonic.com/).
 
 ## Run
 
