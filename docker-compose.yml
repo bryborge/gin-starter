@@ -1,0 +1,25 @@
+version: '3'
+
+services:
+  api:
+    build:
+      context: .
+    # depends_on:
+    #   neo4j:
+    #     condition: service_started
+    environment:
+      TZ: America/Los_Angeles
+    ports:
+      - "8000:8000"
+    restart: unless-stopped
+    # volumes:
+    #   - .:/app
+    # working_dir: /app
+
+  # neo4j:
+  #   image: neo4j:latest
+  #   ports:
+  #     - "7474:7474" # HTTP
+  #     - "7687:7687" # Bolt
+  #   environment:
+  #     NEO4J_AUTH: neo4j/test
