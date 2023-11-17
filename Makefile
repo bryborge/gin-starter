@@ -1,6 +1,6 @@
 # BASE COMMANDS ################################################################
 
-default: bash
+default: shell
 
 up:
 	docker compose up -d
