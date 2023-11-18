@@ -5,13 +5,13 @@ services:
     build:
       context: .
     depends_on:
-      - "neo4j"
+      - 'neo4j'
     environment:
       TZ: America/Los_Angeles
     networks:
      - gin-starter
     ports:
-      - "8000:8000"
+      - '8000:8000'
     restart: unless-stopped
 
   neo4j:
@@ -21,8 +21,8 @@ services:
     networks:
      - gin-starter
     ports:
-      - "7474:7474" # HTTP
-      - "7687:7687" # Bolt
+      - '7474:7474' # HTTP
+      - '7687:7687' # Bolt
 
 networks:
   gin-starter:
