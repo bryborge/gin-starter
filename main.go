@@ -1,6 +1,7 @@
 package main
 
 import (
+	"gin-starter/db"
 	"gin-starter/server"
 	"log"
 
@@ -10,7 +11,9 @@ import (
 func main() {
 	if err := godotenv.Load(); err != nil {
 		log.Fatalf("Error loading .env file: %v", err)
+		panic(err)
 	}
 
+	db.Init()
 	server.Init()
 }

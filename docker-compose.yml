@@ -1,0 +1,29 @@
+version: '3'
+
+services:
+  api:
+    build:
+      context: .
+    depends_on:
+      - 'neo4j'
+    environment:
+      TZ: America/Los_Angeles
+    networks:
+     - gin-starter
+    ports:
+      - '8000:8000'
+    restart: unless-stopped
+
+  neo4j:
+    image: neo4j:latest
+    environment:
+      NEO4J_AUTH: neo4j/password
+    networks:
+     - gin-starter
+    ports:
+      - '7474:7474' # HTTP
+      - '7687:7687' # Bolt
+
+networks:
+  gin-starter:
+    driver: bridge
