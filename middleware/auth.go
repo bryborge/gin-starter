@@ -31,6 +31,7 @@ func EnsureValidToken() func(next http.Handler) http.Handler {
 
 	if err != nil {
 		log.Fatalf("Failed to parse the issuer url: %v", err)
+		panic(err)
 	}
 
 	provider := jwks.NewCachingProvider(issuerURL, 5*time.Minute)
@@ -48,7 +49,8 @@ func EnsureValidToken() func(next http.Handler) http.Handler {
 		validator.WithAllowedClockSkew(time.Minute),
 	)
 	if err != nil {
-		log.Fatalf("Failed to set up the jwt validator")
+		log.Fatalf("Failed to set up the jwt validator: %v", err)
+		panic(err)
 	}
 
 	errorHandler := func(w http.ResponseWriter, r *http.Request, err error) {

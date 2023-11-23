@@ -2,6 +2,7 @@ package db
 
 import (
 	"context"
+	"log"
 	"os"
 
 	"github.com/neo4j/neo4j-go-driver/v5/neo4j"
@@ -17,6 +18,7 @@ func Init() {
 		neo4j.BasicAuth(dbUser, dbPassword, ""))
 
 	if err != nil {
+		log.Fatalf("Error initializing DB: %v", err)
 		panic(err)
 	}
 
@@ -25,6 +27,7 @@ func Init() {
 
 	err = driver.VerifyConnectivity(ctx)
 	if err != nil {
+		log.Fatalf("Error initializing DB: %v", err)
 		panic(err)
 	}
 }
