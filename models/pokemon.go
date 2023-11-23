@@ -1,19 +1,70 @@
 package models
 
-type pokemon struct {
-	ID   string `json:"id"`
+import (
+	"errors"
+
+	"github.com/neo4j/neo4j-go-driver/v5/neo4j"
+)
+
+type Pokemon struct {
+	ID   int64  `json:"id"`
 	Name string `json:"name"`
 }
 
-// TODO: Remove mocked data
-var MockData = []pokemon{
-	{ID: "1", Name: "Bulbasaur"},
-	{ID: "2", Name: "Ivysaur"},
-	{ID: "3", Name: "Venusaur"},
-	{ID: "4", Name: "Charmander"},
-	{ID: "5", Name: "Charmeleon"},
-	{ID: "6", Name: "Charizard"},
-	{ID: "7", Name: "Squirtle"},
-	{ID: "8", Name: "Wartortle"},
-	{ID: "9", Name: "Blastoise"},
+func CreatePokemonInDb(driver neo4j.Driver, name string) error {
+	session := driver.NewSession(neo4j.SessionConfig{})
+	defer session.Close()
+
+	_, err := session.WriteTransaction(func(transaction neo4j.Transaction) (interface{}, error) {
+		result, err := session.Run(
+			"CREATE (p:Pokemon {name: $name}) RETURN id(p)",
+			map[string]interface{}{
+				"id":   1,
+				"name": name,
+			},
+		)
+
+		if err != nil {
+			return nil, err
+		}
+
+		return result.Consume()
+	})
+
+	return err
+}
+
+func GetPokemonInDbByName(driver neo4j.Driver, name string) (Pokemon, error) {
+	session := driver.NewSession(neo4j.SessionConfig{})
+	defer session.Close()
+
+	result, err := session.ReadTransaction(func(transaction neo4j.Transaction) (interface{}, error) {
+		records, err := transaction.Run(
+			"MATCH (p:Pokemon) WHERE p.name = $name RETURN p.name",
+			map[string]interface{}{"name": name},
+		)
+		if err != nil {
+			return nil, err
+		}
+
+		if records.Next() {
+			record := records.Record()
+			pokemon := Pokemon{
+				Name: record.Values[0].(string),
+			}
+			return pokemon, nil
+		}
+
+		return nil, records.Err()
+	})
+
+	if err != nil {
+		return Pokemon{}, err
+	}
+
+	if result == nil {
+		return Pokemon{}, errors.New("no Pokemon found")
+	}
+
+	return result.(Pokemon), nil
 }

@@ -22,7 +22,8 @@ func NewRouter() *gin.Engine {
 	// Protected routes
 	protectedRoutes := router.Group("/api/v1")
 	protectedRoutes.Use(adapter.Wrap(middleware.EnsureValidToken()))
-	protectedRoutes.GET("/pokemon", ApiV1.GetPokemon)
+	protectedRoutes.POST("/pokemon", ApiV1.CreatePokemon)
+	protectedRoutes.GET("/pokemon/:name", ApiV1.GetPokemonByName)
 
 	return router
 }

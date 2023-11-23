@@ -23,7 +23,12 @@ services:
     ports:
       - '7474:7474' # HTTP
       - '7687:7687' # Bolt
+    volumes:
+      - dbdata:/data
 
 networks:
   gin-starter:
     driver: bridge
+
+volumes:
+  dbdata:
